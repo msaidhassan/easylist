@@ -1,0 +1,2 @@
+cat /var/www/html/storage/logs/laravel.log
+mysql -u root -p'mmMMssSS$2024' -e "USE acfemdgm_easylist; SHOW TABLES;"

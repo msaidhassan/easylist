@@ -1,0 +1,42 @@
+# fly.toml app configuration file generated for test-long-shape-26 on 2024-12-18T00:27:51+02:00
+#
+# See https://fly.io/docs/reference/configuration/ for information about how to use this file.
+#
+
+app = 'test-long-shape-26'
+primary_region = 'cdg'
+
+[build]
+  dockerfile = 'Dockerfile'
+
+[env]
+  APP_DEBUG = 'true'
+  APP_ENV = 'production'
+  APP_KEY = 'base64:3Hzl2QwAwS39DTemUDloo//CYdoVKbUBkt5lPFLEYCI='
+  DB_CONNECTION = 'mysql'
+  DB_DATABASE = 'acfemdgm_easylist'
+  DB_HOST = 'localhost'
+  DB_PASSWORD = 'mmMMssSS$2024'
+  DB_PORT = '3306'
+  DB_USERNAME = 'root'
+
+[[mounts]]
+  source = 'my_volume'
+  destination = '/mnt/data'
+
+[[services]]
+  protocol = 'tcp'
+  internal_port = 80
+
+  [[services.ports]]
+    port = 80
+    handlers = ['http']
+
+  [[services.ports]]
+    port = 443
+    handlers = ['tls', 'http']
+
+[[vm]]
+  memory = '1gb'
+  cpu_kind = 'shared'
+  cpus = 1

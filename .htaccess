@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+    Options +FollowSymLinks
+    RewriteEngine On
+
+    # Base path for Laravel (adjust only if necessary)
+    RewriteBase /easylist-me/
+
+    # Redirect root requests to /index.php
+    RewriteCond %{REQUEST_URI} ^/easylist-me/?$ [NC]
+    RewriteRule ^$ /easylist-me/index.php [L,R=301]
+
+    # Redirect other requests to public/index.php if they are not files or directories
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^(.*)$ public/index.php [L]
+</IfModule>
