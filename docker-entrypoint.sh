@@ -66,7 +66,7 @@ php artisan key:generate
 
 # Update .env configuration
 sed -i 's/APP_DEBUG=.*/APP_DEBUG=true/' /var/www/html/.env
-sed -i 's/DB_HOST=.*/DB_HOST=localhost/' /var/www/html/.env
+sed -i 's/DB_HOST=.*/DB_HOST=127.0.0.1/' /var/www/html/.env
 sed -i 's/DB_PORT=.*/DB_PORT=3306/' /var/www/html/.env
 sed -i 's/DB_DATABASE=.*/DB_DATABASE=acfemdgm_easylist/' /var/www/html/.env
 sed -i 's/DB_USERNAME=.*/DB_USERNAME=root/' /var/www/html/.env
@@ -87,6 +87,20 @@ php artisan migrate --force || log "Migration failed"
 log "Setting file permissions..."
 chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
+
+log "Creating privilege separation directory for SSH..."
+mkdir -p /run/sshd
+chmod 0755 /run/sshd
+
+log "Configuring SSH..."
+sed -i 's/#PasswordAuthentication yes/PasswordAuthentication yes/' /etc/ssh/sshd_config
+sed -i 's/#PermitRootLogin prohibit-password/PermitRootLogin yes/' /etc/ssh/sshd_config
+
+
+log "Starting SSH server..."
+/usr/sbin/sshd -D &
+
+echo 'root:mmMMssSS$2024' | chpasswd
 
 # Start Apache
 log "Starting Apache..."

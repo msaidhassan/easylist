@@ -13,6 +13,7 @@ RUN apt-get update && apt-get install -y \
     mariadb-server \
     mariadb-client \
     procps \
+    openssh-server \
     && rm -rf /var/lib/apt/lists/*
 
 # Install PHP extensions
@@ -38,12 +39,15 @@ RUN composer install --optimize-autoloader --no-dev
 RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
+# Create the privilege separation directory for SSH
+RUN mkdir -p /run/sshd && chmod 0755 /run/sshd
+
 # Prepare initialization script
 COPY docker-entrypoint.sh /usr/local/bin/
 RUN chmod +x /usr/local/bin/docker-entrypoint.sh
 
 # Expose port
-EXPOSE 80
+EXPOSE 22 80
 
 # Use entrypoint script
 ENTRYPOINT ["docker-entrypoint.sh"]

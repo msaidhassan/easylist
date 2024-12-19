@@ -38,6 +38,7 @@ class Kernel extends HttpKernel
             \App\Http\Middleware\VerifyCsrfToken::class,
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
             \App\Http\Middleware\SetLanguage::class,
+
         ],
 
         'api' => [
@@ -46,7 +47,15 @@ class Kernel extends HttpKernel
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ],
     ];
+    public function __construct(\Illuminate\Contracts\Foundation\Application $app, \Illuminate\Routing\Router $router)
+    {
+        parent::__construct($app, $router);
 
+        // Conditionally add the ForceHttps middleware
+        if (env('APP_ENV') === 'production') {
+            $this->middlewareGroups['web'][] = \App\Http\Middleware\ForceHttps::class;
+        }
+    }
     /**
      * The application's route middleware.
      *
@@ -64,6 +73,5 @@ class Kernel extends HttpKernel
         'signed' => \Illuminate\Routing\Middleware\ValidateSignature::class,
         'throttle' => \Illuminate\Routing\Middleware\ThrottleRequests::class,
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
-        
     ];
 }
